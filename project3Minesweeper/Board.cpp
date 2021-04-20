@@ -570,7 +570,7 @@ void Board::reset(Board boardobj, sf::RenderWindow &window) {
     overallMineCount=mineCount;
     drawNumbers(flagCount,overallMineCount,window,images);
     window.draw(SmileySprite);
-    updateBoard();
+    // updateBoard();
     resetbool = false;
 }
 void Board:: win(sf::RenderWindow & window){
