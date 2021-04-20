@@ -545,7 +545,7 @@ void Board::reset(Board boardobj, sf::RenderWindow &window) {
     backGroundTile.loadFromFile("images/tile_revealed.png");
     sf::Sprite backGroundTileSprite(backGroundTile);
 
-    boardvec.clear();
+    // boardvec.clear();
     for (int i = 0; i < (height - 88) / 32; i++) {
     for (int j = 0; j < width / 32; j++) {
             boardvec[i][j].mine=false;
@@ -570,7 +570,7 @@ void Board::reset(Board boardobj, sf::RenderWindow &window) {
     overallMineCount=mineCount;
     drawNumbers(flagCount,overallMineCount,window,images);
     window.draw(SmileySprite);
-
+    updateBoard();
     resetbool = false;
 }
 void Board:: win(sf::RenderWindow & window){
