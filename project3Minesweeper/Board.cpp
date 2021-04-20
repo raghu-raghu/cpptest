@@ -26,14 +26,17 @@ void Board::updateBoard(sf::Event event, Board& boardobj, sf::RenderWindow& wind
     sf::Texture coverTile;
     coverTile.loadFromFile("images/tile_hidden.png");
     sf::Sprite CoverTileSprite(coverTile);
+
     //for (int i = 0; i < (height - 88) / 32; i++) {
     //for (int j = 0; j < width / 32; j++) {
         for (int i = 0; i < boardvec.size(); i++) {
             for (int j = 0; j < boardvec[i].size(); j++) {
+
                 backGroundTileSprite.setPosition(j * 32, i * 32);
                 window.draw(backGroundTileSprite);
                 CoverTileSprite.setPosition(j * 32, i * 32);
                 window.draw(CoverTileSprite);
+                
                 boardvec[i][j].setItem(images, boardvec, window);
                 boardvec[i][j].renderTile(window, i, j, boardvec, images);
 
@@ -253,6 +256,8 @@ void Board::initializeBoard(sf::RenderWindow& window, Board boardobj) {
     randomizeMines(boardvec,boardobj);
     setNeighbors();
 
+    
+
 }
 
 void Board::LoadAllTextures() {
@@ -315,6 +320,7 @@ void Board::LoadAllTextures() {
     digits.setPosition(32, height - 88);
 
 }
+
 void Board::drawDigits(int a, sf::RenderWindow& window){
     if (a >= 0) {
         int hundDigit = (a / 10) / 10;
@@ -352,19 +358,20 @@ void Board::drawDigits(int a, sf::RenderWindow& window){
 void Board::loadDigits(sf::RenderWindow& window){
     drawDigits(overallMineCount-flagCount, window);
 }
+
 void Board::randomizeMines(vector<vector<Tiles>>& tiles, Board boardobj){
-//cout<< "mine count " << this->mineCount<<endl;
+    cout<< "mine count " << this->mineCount<<endl;
 
-    for(int a=0; a< this->mineCount; a++) {
+    for(int a=0; a< this->mineCount ; a++) {
 
-        //srand((unsigned) time(0));
+        // srand((unsigned) time(0));
         int i = (rand() % (boardobj.width / 32)) + 0;
         //srand((unsigned) time(0));
         int j=(rand() % ((boardobj.height -88) /32)) + 0;
 
+        cout << "bomb at " << a << ":" << j <<" " << i <<endl;
 
         tiles[j][i].mine = true;
-        cout << "bomb at " << j <<" " << i <<endl;
     }
 
 }
@@ -408,6 +415,7 @@ void Board:: getNumber(string number, vector<string> &numdraw){
         }
     }
 }
+
 void Board::drawNumbers(int flagCount, int overallMineCount, sf::RenderWindow &window, map<string, sf::Texture> &images) {
 
     string drawCount= to_string(overallMineCount-flagCount);
@@ -460,6 +468,7 @@ void Board::drawNumbers(int flagCount, int overallMineCount, sf::RenderWindow &w
     }
 
 }
+
 void Board::setNeighbors() {
     for(int r=0; r<boardvec.size();r++){
         for(int c=0; c<boardvec[r].size();c++){
@@ -488,6 +497,16 @@ void Board::setNeighbors() {
                 boardvec[r][c].tileNeighbor[7]=&boardvec[r+1][c+1];
             }
 
+            if(r == boardvec.size() -1 ){
+                boardvec[r][c].tileNeighbor[5]=NULL;
+                boardvec[r][c].tileNeighbor[6]=NULL;
+                boardvec[r][c].tileNeighbor[7]=NULL;
+            }
+            if(r == 0 ){
+                boardvec[r][c].tileNeighbor[0]=NULL;
+                boardvec[r][c].tileNeighbor[1]=NULL;
+                boardvec[r][c].tileNeighbor[2]=NULL;
+            }
         }
     }
 
