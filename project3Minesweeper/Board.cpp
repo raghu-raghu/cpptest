@@ -11,7 +11,7 @@ void Board::savePosition(sf::Event event){
 }
 
 void Board::updateBoard(sf::Event event, Board& boardobj, sf::RenderWindow& window) {
-
+    
     Tiles chosen1;
     window.draw(debugSprite);
     window.draw(test1Sprite);
@@ -187,8 +187,8 @@ void Board::updateBoard(sf::Event event, Board& boardobj, sf::RenderWindow& wind
            while (debugbool == true) {
                for (unsigned int i = 0; i < boardvec.size(); i++) {
                    for (int j = 0; j < boardvec[i].size(); j++) {
-                       if (boardvec[j][i].mine == true) {
-                           boardvec[j][i].revealallmines(boardvec, window);
+                       if (boardvec[i][j].mine == true) {
+                           boardvec[i][j].revealallmines(boardvec, window);
                        }
                    }
                }
@@ -545,7 +545,7 @@ void Board::reset(Board boardobj, sf::RenderWindow &window) {
     backGroundTile.loadFromFile("images/tile_revealed.png");
     sf::Sprite backGroundTileSprite(backGroundTile);
 
-    //boardvec.clear();
+    boardvec.clear();
     for (int i = 0; i < (height - 88) / 32; i++) {
     for (int j = 0; j < width / 32; j++) {
             boardvec[i][j].mine=false;

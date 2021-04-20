@@ -27,6 +27,8 @@ void Tiles::tileClicked(vector<vector<Tiles>>& boardvec, int x, int y){         
 void Tiles::revealClicked(vector<vector<Tiles>>& tiles, int x, int y){
     int x2= (x/32);
     int y2 = y/32;
+    if(y2 > 15) return;
+    
     tiles[y2][x2].areThereAdjacentMines=true;
     tiles[y2][x2].rightclick = false;
     tiles[y2][x2].leftclick = true;
