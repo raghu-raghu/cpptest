@@ -991,6 +991,7 @@ void Board::bottomButtons(int x, int y , sf::RenderWindow &window) {
 }
 
 void Board::debugBoard(sf::RenderWindow &window) {
+    cout << "came to debugboard stat "<< debugmode << endl;
     for (unsigned int i = 0; i < boardvec.size(); i++) {
         for (unsigned int j = 0; j < boardvec[i].size(); j++) {
             if (boardvec[i][j].mine == true) {
@@ -999,8 +1000,7 @@ void Board::debugBoard(sf::RenderWindow &window) {
                 mine.loadFromFile("images/mine.png");
                 sf::Sprite mineSprite(mine);
                 mineSprite.setPosition(j * 32, i * 32);
-                //window.draw(mineSprite);
-
+                window.draw(mineSprite);
             }
         }
     }

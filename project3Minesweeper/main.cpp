@@ -14,6 +14,7 @@ int main() {
     Board boardobj;
     boardobj.loadWindow("boards/config.cfg");
     sf::RenderWindow window(sf::VideoMode(boardobj.width, boardobj.height), "Minesweeper!");
+    // window.setVerticalSyncEnabled(true);
 
     boardobj.initializeBoard(window);
 
@@ -59,8 +60,10 @@ int main() {
 
         //event then clear draw display
         window.clear(sf::Color::Black);
+
         //boardobj.updateBoard(event,boardobj,window);
         boardobj.draw(window);
+        if(boardobj.debugmode == true ) boardobj.debugBoard(window);
         window.display(); // comment this line to see the flag..
     }
 
