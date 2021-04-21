@@ -1,4 +1,4 @@
-#include <__bit_reference>
+//#include <__bit_reference>
 //
 // Created by Alyssa Foglia on 4/14/21.
 //
@@ -19,10 +19,10 @@ public:
     int width;
     int mineCount;
     int tileCount=0;
-    int overallMineCount;
+    int overallMineCount=0;
     int xEvent;
     int yEvent;
-    void updateBoard(sf::Event event, Board& boardobj, sf::RenderWindow& window);
+    void updateBoard(sf::RenderWindow& window);
     void savePosition(sf::Event event);
     int flagCount=0;
     vector<sf::Sprite> flags;
@@ -30,7 +30,7 @@ public:
     vector<sf::Sprite> bombs;
     vector<vector<Tiles>> boardvec;
     void loadWindow(string filename);
-    void initializeBoard(sf::RenderWindow& window, Board boardobj);
+    void initializeBoard(sf::RenderWindow& window);
     map<string, sf::Texture> images;
     bool mineClicked=false;
     bool debugmode = false;
@@ -45,7 +45,7 @@ public:
     vector<int> t1;
     vector<int> t2;
     vector<int> t3;
-    void randomizeMines( vector<vector<Tiles>>& tiles, Board boardobj);
+    void randomizeMines( vector<vector<Tiles>>& tiles);
     void getNumber(string number, vector<string> &numdraw);
     void drawNumbers(int flagCount, int overallMineCount, sf::RenderWindow &window,map<string,sf::Texture> &images);
     void setNeighbors();
@@ -53,10 +53,16 @@ public:
     vector<vector<int>> t12;
     vector<vector<int>> fortest2;
     vector<vector<int>> fortest3;
-    void reset(Board boardobj,sf::RenderWindow &window);
+    void reset(sf::RenderWindow &window);
     void win(sf::RenderWindow & window);
     bool resetbool = false;
     bool debugbool = false;
+    void bottomButtons(int x, int y, sf::RenderWindow &window);
+    void draw(sf::RenderWindow &window);
+    bool test2=false;
+    bool test1=false;
+    bool test3=false;
+    void debugBoard(sf::RenderWindow &window);
 
 
     sf::Sprite back;
@@ -71,6 +77,7 @@ public:
     sf::Sprite sadSprite;
     sf::Sprite winningFace;
     sf:: Sprite digits;
+    sf::Sprite bomb;
 };
 
 

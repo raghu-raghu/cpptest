@@ -9,10 +9,329 @@ void Board::savePosition(sf::Event event){
      this->xEvent = event.mouseButton.x/32;
      this->yEvent = event.mouseButton.y/32;
 }
+void Board::draw(sf::RenderWindow &window){
+    //Tiles chosen1;
+    window.draw(debugSprite);
+    window.draw(test1Sprite);
+    window.draw(test2Sprite);
+    window.draw(test3Sprite);
+    window.draw(SmileySprite);
+    //drawNumbers(flagCount, overallMineCount, window, images);
 
-void Board::updateBoard(sf::Event event, Board& boardobj, sf::RenderWindow& window) {
-    
-    Tiles chosen1;
+
+    /*
+    if(debugmode==true){
+        cout<< " in debug mode" <<endl;
+        for (unsigned int i = 0; i < boardvec.size(); i++) {
+            for (unsigned int j = 0; j < boardvec[i].size(); j++) {
+                if (boardvec[i][j].mine == true) {
+                    cout << "MINE REVEALED " << i << " " << j << endl;
+                    sf::Texture mine;
+                    mine.loadFromFile("images/mine.png");
+                    sf::Sprite mineSprite(mine);
+                    mineSprite.setPosition(j * 32, i * 32);
+                    window.draw(mineSprite);
+
+                }
+            }
+        }
+        //updateBoard(window);
+        debugmode=false;
+        //return;
+    }
+*/
+
+
+        sf::Texture backGroundTile;
+        backGroundTile.loadFromFile("images/tile_revealed.png");
+        sf::Sprite backGroundTileSprite(backGroundTile);
+        sf::Texture coverTile;
+        coverTile.loadFromFile("images/tile_hidden.png");
+        sf::Sprite CoverTileSprite(coverTile);
+        //for (int i = 0; i < (height - 88) / 32; i++) {
+        //for (int j = 0; j < width / 32; j++) {
+        for (int i = 0; i < boardvec.size(); i++) {
+            for (int j = 0; j < boardvec[i].size(); j++) {
+                backGroundTileSprite.setPosition(j * 32, i * 32);
+                window.draw(backGroundTileSprite);
+                CoverTileSprite.setPosition(j * 32, i * 32);
+                window.draw(CoverTileSprite);
+
+
+                boardvec[i][j].setItem(images, boardvec, window);
+                boardvec[i][j].renderTile(window, i, j, boardvec, images);
+
+                if (boardvec[i][j].endgameintiles == true) {
+                    endgame(window);
+                }
+
+                if (boardvec[i][j].checkwin(boardvec) == true) {
+                    win(window);
+                }
+
+            }
+        }
+
+
+    if(test2==true) {
+        overallMineCount=0;
+        for (unsigned int i = 0; i < boardvec.size(); i++) {
+            for (int j = 0; j < boardvec[i].size(); j++) {
+            //boardvec[i][j].setItem(images, boardvec, window);
+                if (t12[i][j] == 0 ) {
+                boardvec[i][j].mine = false;
+                itemSprite.setTexture(images["tile_hidden.png"]);
+                itemSprite.setPosition(j * 32, i * 32);
+             }
+                else if (t12[i][j] == 1) {
+                boardvec[i][j].mine = true;
+                sf::Texture mine;
+                mine.loadFromFile("images/mine.png");
+                sf::Sprite mineSprite(mine);
+                mineSprite.setPosition(j * 32, i * 32);
+                if (t12[i][j] == 1) {
+                    this->overallMineCount+=1;
+                }
+
+            }
+        }
+    }
+        test2=false;
+}
+
+
+
+if(test1==true) {
+    overallMineCount=0;
+    for (unsigned int i = 0; i < boardvec.size(); i++) {
+        for (int j = 0; j < boardvec[i].size(); j++) {
+            if (fortest2[i][j] == 1) {
+                boardvec[i][j].mine = true;
+                this->overallMineCount += 1;
+                sf::Texture mine;
+                mine.loadFromFile("images/mine.png");
+                sf::Sprite mineSprite(mine);
+                mineSprite.setPosition(j * 32, i * 32);
+                //window.draw(mineSprite);
+            }
+            if (fortest2[i][j] == 0) {
+                boardvec[i][j].mine = false;
+                itemSprite.setTexture(images["tile_hidden.png"]);
+                itemSprite.setPosition(j * 32, i * 32);
+                //window.draw(itemSprite);
+            }
+        }
+    }
+    test1=false;
+}
+if(test3==true) {
+overallMineCount=0;
+    for (unsigned int i = 0; i < boardvec.size(); i++) {
+        for (int j = 0; j < boardvec[i].size(); j++) {
+            if (fortest3[i][j] == 1) {
+                boardvec[i][j].mine = true;
+                this->overallMineCount += 1;
+                sf::Texture mine;
+                mine.loadFromFile("images/mine.png");
+                sf::Sprite mineSprite(mine);
+                mineSprite.setPosition(j * 32, i * 32);
+                //window.draw(mineSprite);
+            }
+            if (fortest3[i][j] == 0) {
+                boardvec[i][j].mine = false;
+                itemSprite.setTexture(images["tile_hidden.png"]);
+                itemSprite.setPosition(j * 32, i * 32);
+                //window.draw(itemSprite);
+            }
+        }
+    }
+    test3=false;
+}
+
+/*
+    if(debugmode==true){
+            cout << "DEBUG TRUE" << endl;
+            for (int i = 0; i < boardvec.size(); i++) {
+                for (int j = 0; j < boardvec[i].size(); j++) {
+                    if (boardvec[i][j].mine == true) {
+                        cout << "MINE REVEALED" << endl;
+                        sf::Texture mine;
+                        mine.loadFromFile("images/mine.png");
+                        sf::Sprite mineSprite(mine);
+                        mineSprite.setPosition(j * 32, i * 32);
+                        window.draw(mineSprite);
+
+                    }
+
+                    /*if(boardvec[i][j].mine==true){
+                        boardvec[i][j].revealallmines(boardvec,window);
+                    }
+
+                }
+            }
+            debugmode = false;
+
+    }
+    */
+
+    //sf::FloatRect resetButton = SmileySprite.getGlobalBounds();
+    //if(resetButton.contains(sf::Vector2f(event.mouseButton.x, event.mouseButton.y))){
+/*
+    if(event.mouseButton.x>(width / 2) -16 &&  event.mouseButton.x<(width / 2) + 16 && event.mouseButton.y> height-88 && event.mouseButton.button == sf::Mouse::Left) {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
+            resetbool = true;
+            if(resetbool==true) {
+                cout << "smiley" << endl;
+                boardobj.reset(boardobj, window);
+                cout << "RESEt in function" << endl;
+            }
+        }
+    }
+
+
+    sf::FloatRect test2button = test2Sprite.getGlobalBounds();
+    if(test2button.contains(sf::Vector2f(event.mouseButton.x,event.mouseButton.y))){
+        t12.clear();
+        ifstream input("boards/testboard2.brd");
+        while (!input.eof()) {
+            vector<int> newvec;
+            newvec.clear();
+            string firstValueString;
+            getline(input, firstValueString);
+            for (unsigned int i = 0; i < firstValueString.length() + 1; i++) {
+                newvec.push_back((int) firstValueString[i] - 48);
+            }
+            t12.push_back(newvec);
+        }
+        input.close();
+        overallMineCount = 0;
+        for (unsigned int i = 0; i < boardvec.size(); i++) {
+            for (int j = 0; j < boardvec[i].size(); j++) {
+                //boardvec[i][j].setItem(images, boardvec, window);
+                if (t12[i][j] == 0 && boardvec[i][j].item == true) {
+                    boardvec[i][j].mine = false;
+                    //boardvec[i][j].setItem(images, boardvec, window);
+                    itemSprite.setTexture(images["tile_hidden.png"]);
+                    itemSprite.setPosition(j * 32, i * 32);
+                    //window.draw(itemSprite);
+                } else if (t12[i][j] == 1) {
+                    boardvec[i][j].mine = true;
+                    sf::Texture mine;
+                    mine.loadFromFile("images/mine.png");
+                    sf::Sprite mineSprite(mine);
+                    mineSprite.setPosition(j * 32, i * 32);
+                    // window.draw(mineSprite);
+                    if (t12[i][j] == 1) {
+                        overallMineCount++;
+                    }
+
+                }
+            }
+        }
+    }
+
+    sf::FloatRect test1button = test1Sprite.getGlobalBounds();
+    if (test1button.contains(sf::Vector2f(event.mouseButton.x, event.mouseButton.y))) {
+        fortest2.clear();
+        ifstream input2("boards/testboard1.brd");
+        while (!input2.eof()) {
+            vector<int> newvec2;
+            string firstValueString2;
+            getline(input2, firstValueString2);
+            for (unsigned int i = 0; i < firstValueString2.length(); i++) {
+                newvec2.push_back((int) firstValueString2[i] - 48);
+            }
+            fortest2.push_back(newvec2);
+        }
+        input2.close();
+        overallMineCount=0;
+        for (unsigned int i = 0; i < boardvec.size(); i++) {
+            for (int j = 0; j < boardvec[i].size(); j++) {
+                if (fortest2[i][j] == 1) {
+                    boardvec[i][j].mine = true;
+                    this->overallMineCount+=1;
+                    sf::Texture mine;
+                    mine.loadFromFile("images/mine.png");
+                    sf::Sprite mineSprite(mine);
+                    mineSprite.setPosition(j * 32, i * 32);
+                    //window.draw(mineSprite);
+                }
+                if (fortest2[i][j] == 0) {
+                    boardvec[i][j].mine = false;
+                    itemSprite.setTexture(images["tile_hidden.png"]);
+                    itemSprite.setPosition(j*32,i*32);
+                    //window.draw(itemSprite);
+                }
+            }
+        }
+    }
+
+    sf::FloatRect test3button = test3Sprite.getGlobalBounds();
+    if (test3button.contains(sf::Vector2f(event.mouseButton.x, event.mouseButton.y))) {
+        ifstream input3("boards/testboard3.brd");
+        while (!input3.eof()) {
+            vector<int> newvec3;
+            string firstValueString3;
+            getline(input3, firstValueString3);
+            for (unsigned int i = 0; i < firstValueString3.length(); i++) {
+                newvec3.push_back((int) firstValueString3[i] - 48);
+            }
+            fortest3.push_back(newvec3);
+        }
+        input3.close();
+        overallMineCount=0;
+        for (unsigned int i = 0; i < boardvec.size(); i++) {
+            for (int j = 0; j < boardvec[i].size(); j++) {
+                if (fortest3[i][j] == 1) {
+                    boardvec[i][j].mine = true;
+                    overallMineCount+=1;
+                    sf::Texture mine;
+                    mine.loadFromFile("images/mine.png");
+                    sf::Sprite mineSprite(mine);
+                    mineSprite.setPosition(j * 32, i * 32);
+                    //window.draw(mineSprite);
+                }
+                if (fortest3[i][j] == 0) {
+                    boardvec[i][j].mine = false;
+                    itemSprite.setTexture(images["tile_hidden.png"]);
+                    itemSprite.setPosition(j*32,i*32);
+                    //window.draw(itemSprite);
+                }
+            }
+        }
+    } */
+
+    drawNumbers(flagCount, overallMineCount, window, images);
+
+}
+
+void Board::updateBoard(sf::RenderWindow& window) {
+    if(resetbool==true) {
+        reset(window);
+    }
+
+cout << "update --------------------------------" <<endl;
+    if(debugmode==true){
+        cout << "DEBUG TRUE"<<endl;
+        //debugmode=true;
+        debugBoard(window);
+    }
+    if(test2==true){
+        //return;
+        test2==true;
+        overallMineCount=0;
+    }
+    if(test1==true){
+        test1=true;
+        overallMineCount=0;
+    }
+    if(test3==true){
+        test3=true;
+        overallMineCount=0;
+    }
+/*
+
+    //Tiles chosen1;
     window.draw(debugSprite);
     window.draw(test1Sprite);
     window.draw(test2Sprite);
@@ -26,17 +345,14 @@ void Board::updateBoard(sf::Event event, Board& boardobj, sf::RenderWindow& wind
     sf::Texture coverTile;
     coverTile.loadFromFile("images/tile_hidden.png");
     sf::Sprite CoverTileSprite(coverTile);
-
     //for (int i = 0; i < (height - 88) / 32; i++) {
     //for (int j = 0; j < width / 32; j++) {
         for (int i = 0; i < boardvec.size(); i++) {
             for (int j = 0; j < boardvec[i].size(); j++) {
-
                 backGroundTileSprite.setPosition(j * 32, i * 32);
                 window.draw(backGroundTileSprite);
                 CoverTileSprite.setPosition(j * 32, i * 32);
                 window.draw(CoverTileSprite);
-                
                 boardvec[i][j].setItem(images, boardvec, window);
                 boardvec[i][j].renderTile(window, i, j, boardvec, images);
 
@@ -53,17 +369,18 @@ void Board::updateBoard(sf::Event event, Board& boardobj, sf::RenderWindow& wind
 
     //sf::FloatRect resetButton = SmileySprite.getGlobalBounds();
     //if(resetButton.contains(sf::Vector2f(event.mouseButton.x, event.mouseButton.y))){
-
+/*
     if(event.mouseButton.x>(width / 2) -16 &&  event.mouseButton.x<(width / 2) + 16 && event.mouseButton.y> height-88 && event.mouseButton.button == sf::Mouse::Left) {
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
             resetbool = true;
-            while(resetbool==true) {
+            if(resetbool==true) {
                 cout << "smiley" << endl;
                 boardobj.reset(boardobj, window);
                 cout << "RESEt in function" << endl;
             }
         }
     }
+
 
     sf::FloatRect test2button = test2Sprite.getGlobalBounds();
     if(test2button.contains(sf::Vector2f(event.mouseButton.x,event.mouseButton.y))){
@@ -104,7 +421,6 @@ void Board::updateBoard(sf::Event event, Board& boardobj, sf::RenderWindow& wind
                     }
                 }
             }
-
     }
 
     sf::FloatRect test1button = test1Sprite.getGlobalBounds();
@@ -178,13 +494,15 @@ void Board::updateBoard(sf::Event event, Board& boardobj, sf::RenderWindow& wind
         }
     }
 
+
     sf::FloatRect debugButton = debugSprite.getGlobalBounds();
     if (debugButton.contains(sf::Vector2f(event.mouseButton.x, event.mouseButton.y))){
        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)) {
            Tiles chosen;
            //chosen.debugbuttonPressed(boardvec, window);
-           debugbool=true;
-           while (debugbool == true) {
+           //debugbool=true;
+           debugmode=true;
+           while (debugmode == true) {
                for (unsigned int i = 0; i < boardvec.size(); i++) {
                    for (int j = 0; j < boardvec[i].size(); j++) {
                        if (boardvec[i][j].mine == true) {
@@ -192,11 +510,12 @@ void Board::updateBoard(sf::Event event, Board& boardobj, sf::RenderWindow& wind
                        }
                    }
                }
-                debugbool=false;
+                debugmode=false;
            }
        }
 
     }
+     */
 
     //drawNumbers(flagCount, overallMineCount, window, images);
 
@@ -235,8 +554,17 @@ void Board::loadWindow(string filename) {
 
 
 }
-void Board::initializeBoard(sf::RenderWindow& window, Board boardobj) {
+void Board::initializeBoard(sf::RenderWindow& window) {
+
+    cout << "IN INITIALIZE" <<endl;
     LoadAllTextures();
+    this->boardvec.clear();
+    cout << " BEFORE" <<  boardvec.size() << endl;
+    boardvec.clear();
+    cout << " AFTER " <<  boardvec.size() << endl;
+    cout<< "Width " << width <<endl;
+    cout << " height" << height << endl;
+
 
     for (int i = 0; i < (height - 88) / 32; i++) {
         std::vector<Tiles> board2;
@@ -253,11 +581,10 @@ void Board::initializeBoard(sf::RenderWindow& window, Board boardobj) {
     debugmode = false;
     numFlags = 0;
     revealedTiles = 0;
-    randomizeMines(boardvec,boardobj);
+    randomizeMines(boardvec);
+    overallMineCount=mineCount;
     setNeighbors();
-
-    
-
+    cout << "END" <<endl;
 }
 
 void Board::LoadAllTextures() {
@@ -320,7 +647,6 @@ void Board::LoadAllTextures() {
     digits.setPosition(32, height - 88);
 
 }
-
 void Board::drawDigits(int a, sf::RenderWindow& window){
     if (a >= 0) {
         int hundDigit = (a / 10) / 10;
@@ -358,20 +684,19 @@ void Board::drawDigits(int a, sf::RenderWindow& window){
 void Board::loadDigits(sf::RenderWindow& window){
     drawDigits(overallMineCount-flagCount, window);
 }
+void Board::randomizeMines(vector<vector<Tiles>>& tiles){
+//cout<< "mine count " << this->mineCount<<endl;
+ cout<< "IN RANDOMIZE MINES" <<endl;
+    for(int a=0; a< this->mineCount; a++) {
 
-void Board::randomizeMines(vector<vector<Tiles>>& tiles, Board boardobj){
-    cout<< "mine count " << this->mineCount<<endl;
-
-    for(int a=0; a< this->mineCount ; a++) {
-
-        // srand((unsigned) time(0));
-        int i = (rand() % (boardobj.width / 32)) + 0;
         //srand((unsigned) time(0));
-        int j=(rand() % ((boardobj.height -88) /32)) + 0;
+        int i = (rand() % (width / 32)) + 0;
+        //srand((unsigned) time(0));
+        int j=(rand() % ((height -88) /32)) + 0;
 
-        cout << "bomb at " << a << ":" << j <<" " << i <<endl;
 
         tiles[j][i].mine = true;
+        cout << "bomb at " << j <<" " << i <<endl;
     }
 
 }
@@ -415,7 +740,6 @@ void Board:: getNumber(string number, vector<string> &numdraw){
         }
     }
 }
-
 void Board::drawNumbers(int flagCount, int overallMineCount, sf::RenderWindow &window, map<string, sf::Texture> &images) {
 
     string drawCount= to_string(overallMineCount-flagCount);
@@ -468,8 +792,8 @@ void Board::drawNumbers(int flagCount, int overallMineCount, sf::RenderWindow &w
     }
 
 }
-
 void Board::setNeighbors() {
+
     for(int r=0; r<boardvec.size();r++){
         for(int c=0; c<boardvec[r].size();c++){
             if(r!=0 && c!=0){
@@ -496,7 +820,6 @@ void Board::setNeighbors() {
             if(r!=boardvec.size() && c!=boardvec[r].size()){
                 boardvec[r][c].tileNeighbor[7]=&boardvec[r+1][c+1];
             }
-
             if(r == boardvec.size() -1 ){
                 boardvec[r][c].tileNeighbor[5]=NULL;
                 boardvec[r][c].tileNeighbor[6]=NULL;
@@ -507,6 +830,7 @@ void Board::setNeighbors() {
                 boardvec[r][c].tileNeighbor[1]=NULL;
                 boardvec[r][c].tileNeighbor[2]=NULL;
             }
+
         }
     }
 
@@ -534,10 +858,9 @@ Tile* tileNeighbor[7]
 void Board::endgame(sf::RenderWindow &window) {
     window.draw(sadSprite);
 }
-void Board::reset(Board boardobj, sf::RenderWindow &window) {
-    Tiles chosen;
-    //chosen.resetInTiles(boardvec,window);
+void Board::reset(sf::RenderWindow &window) {
 
+    cout << "IN RESET " <<endl;
     sf::Texture coverTile;
     coverTile.loadFromFile("images/tile_hidden.png");
     sf::Sprite CoverTileSprite(coverTile);
@@ -545,36 +868,143 @@ void Board::reset(Board boardobj, sf::RenderWindow &window) {
     backGroundTile.loadFromFile("images/tile_revealed.png");
     sf::Sprite backGroundTileSprite(backGroundTile);
 
-    // boardvec.clear();
+
+    //boardvec.clear();
+    initializeBoard(window);
+
+   /*
     for (int i = 0; i < (height - 88) / 32; i++) {
     for (int j = 0; j < width / 32; j++) {
-            boardvec[i][j].mine=false;
-            boardvec[i][j].flag=false;
-            boardvec[i][j].revealed=false;
-            boardvec[i][j].tileNeighbor.clear();
-            backGroundTileSprite.setPosition(j * 32, i * 32);
-            window.draw(backGroundTileSprite);
-            CoverTileSprite.setPosition(j * 32, i * 32);
-            window.draw(CoverTileSprite);
+           boardvec[i][j].mine=false;
+           boardvec[i][j].flag=false;
+           boardvec[i][j].revealed=false;
+           boardvec[i][j].tileNeighbor.clear();
+           //backGroundTileSprite.setPosition(j * 32, i * 32);
+           //window.draw(backGroundTileSprite);
+            //CoverTileSprite.setPosition(j * 32, i * 32);
+           // window.draw(CoverTileSprite);
+            //cout<< "RESET SHOULD DRAW" << endl;
             //boardvec[i][j].setItem(images, boardvec, window);
             //boardvec[i][j].renderTile(window, i, j, boardvec, images);
         }
     }
     cout << "RESET" <<endl;
-    mineClicked = false;
-    debugmode = false;
-    numFlags = 0;
-    revealedTiles = 0;
-    randomizeMines(boardvec,boardobj);
-    setNeighbors();
+
+/*
+    for (int i = 0; i < boardvec.size(); i++) {
+        for (int j = 0; j < boardvec[i].size(); j++) {
+            boardvec[i][j].setItem(images, boardvec, window);
+            boardvec[i][j].renderTile(window, i, j, boardvec, images);
+        }
+    }
+    */
+
     overallMineCount=mineCount;
     drawNumbers(flagCount,overallMineCount,window,images);
-    window.draw(SmileySprite);
-    // updateBoard();
+     //tileCount=0;
+    //window.draw(SmileySprite);
     resetbool = false;
 }
 void Board:: win(sf::RenderWindow & window){
     window.draw(winningFace);
+}
+
+void Board::bottomButtons(int x, int y , sf::RenderWindow &window) {
+    cout << "bottom button >>>>>>>>" <<endl;
+    if(x>(width / 2) -16 &&  x<(width / 2) + 48) {
+            resetbool = true;
+            updateBoard(window);
+    }
+
+    //debug button
+     if (x > (width/2)+112 && x < (width/2)+176) {  //112 144
+         debugmode=true;
+       cout << "DEBUG-----------------------" <<endl;
+/*
+         if(debugmode==false){
+             debugmode=true;
+         }
+
+         else{
+             debugmode=false;
+         }
+         */
+       updateBoard(window);
+    }
+
+    sf::FloatRect test2button = test2Sprite.getGlobalBounds();
+    if(test2button.contains(sf::Vector2f(x,y))){
+        t12.clear();
+        ifstream input("boards/testboard2.brd");
+        while (!input.eof()) {
+            vector<int> newvec;
+            newvec.clear();
+            string firstValueString;
+            getline(input, firstValueString);
+            for (unsigned int i = 0; i < firstValueString.length() + 1; i++) {
+                newvec.push_back((int) firstValueString[i] - 48);
+            }
+            t12.push_back(newvec);
+        }
+        input.close();
+        overallMineCount = 0;
+       test2=true;
+       updateBoard(window);
+    }
+
+    sf::FloatRect test1button = test1Sprite.getGlobalBounds();
+    if (test1button.contains(sf::Vector2f(x, y))) {
+        fortest2.clear();
+        ifstream input2("boards/testboard1.brd");
+        while (!input2.eof()) {
+            vector<int> newvec2;
+            string firstValueString2;
+            getline(input2, firstValueString2);
+            for (unsigned int i = 0; i < firstValueString2.length(); i++) {
+                newvec2.push_back((int) firstValueString2[i] - 48);
+            }
+            fortest2.push_back(newvec2);
+        }
+        input2.close();
+        overallMineCount=0;
+        test1=true;
+        updateBoard(window);
+    }
+    sf::FloatRect test3button = test3Sprite.getGlobalBounds();
+    if (test3button.contains(sf::Vector2f(x, y))) {
+        ifstream input3("boards/testboard3.brd");
+        while (!input3.eof()) {
+            vector<int> newvec3;
+            string firstValueString3;
+            getline(input3, firstValueString3);
+            for (unsigned int i = 0; i < firstValueString3.length(); i++) {
+                newvec3.push_back((int) firstValueString3[i] - 48);
+            }
+            fortest3.push_back(newvec3);
+        }
+        input3.close();
+        this->overallMineCount=0;
+        test3=true;
+    }
+
+
+}
+
+void Board::debugBoard(sf::RenderWindow &window) {
+    for (unsigned int i = 0; i < boardvec.size(); i++) {
+        for (unsigned int j = 0; j < boardvec[i].size(); j++) {
+            if (boardvec[i][j].mine == true) {
+                cout << "MINE REVEALED " << i << " " << j << endl;
+                sf::Texture mine;
+                mine.loadFromFile("images/mine.png");
+                sf::Sprite mineSprite(mine);
+                mineSprite.setPosition(j * 32, i * 32);
+                //window.draw(mineSprite);
+
+            }
+        }
+    }
+    //debugmode=false;
 }
 
 

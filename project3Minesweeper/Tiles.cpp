@@ -25,14 +25,17 @@ void Tiles::tileClicked(vector<vector<Tiles>>& boardvec, int x, int y){         
 
 }
 void Tiles::revealClicked(vector<vector<Tiles>>& tiles, int x, int y){
+
+
     int x2= (x/32);
     int y2 = y/32;
     if(y2 > 15) return;
-    
     tiles[y2][x2].areThereAdjacentMines=true;
     tiles[y2][x2].rightclick = false;
     tiles[y2][x2].leftclick = true;
     cout << "LEFT CLICK-------------------" <<endl;
+
+    if(y2>15) return;           //added might stop crashing
 
    if (tiles[y2][x2].mine==true){
         endgamebool=true;
@@ -61,18 +64,12 @@ void Tiles::renderTile(sf::RenderWindow &window, int i,int j,vector<vector<Tiles
         }
     }
     else if(tiles[i][j].leftclick == true){
-        //cout<< "Left click statement" <<endl;
-        //if(this->reset2==true){
-            //cout<< "RESET IS TRUE" <<endl;
-            //return;
-        //}
         if(endgamebool==true && tiles[i][j].endgameintiles==true){
             revealallmines(tiles,window);
         }
 
-
         else{
-            if(tiles[i][j].adjacentMine==0){
+            /*if(tiles[i][j].adjacentMine==0){
                 this->numberrevealed++;
                 //recursion();
                 for (int i = 0; i < tileNeighbor.size(); i++) {
@@ -83,28 +80,40 @@ void Tiles::renderTile(sf::RenderWindow &window, int i,int j,vector<vector<Tiles
                             window.draw(itemSprite);
                             //tileNeighbor[i]->revealTile(tiles,images,window);
 
-
                             //call function to draw
                             //recursion();
                         }
                     }
                 }
 
+            }*/
+            if(tiles[i][j].stoprevealing==true){
+                recursion(i,j,window,tiles);
             }
 
+            if(debugmode==true && tiles[i][j].mine==true){
+                bomb.setPosition(j * 32, i * 32);
+                window.draw(bomb);
+
+                cout<< j << " " << i << " -----------------------" << endl;
+            }
+            else {
                 //revealTile(tiles, images, window);
                 itemSprite.setPosition(j * 32, i * 32);
                 window.draw(itemSprite);
                 checkwin(tiles);
-                tiles[i][j].revealed=true;
+                tiles[i][j].revealed = true;
+            }
+
         }
 
     }
+
 }
 
 void Tiles::Tile(map<string, sf::Texture>& images, bool mine, int xcor, int ycor){
-    this->xcor=xcor/32;
-    this->ycor=ycor/32;
+    this->xcor=xcor;
+    this->ycor=ycor;
     this->mine=mine;
     this->debugmode=false;
     this->flag=false;
@@ -122,6 +131,7 @@ void Tiles::Tile(map<string, sf::Texture>& images, bool mine, int xcor, int ycor
     bomb.setTexture(images["mine"]);
     bomb.setPosition(sf::Vector2f(xcor, ycor));
 
+    tileNeighbor.clear();
     for (int i = 0; i < 8; i++) {
         tileNeighbor.push_back(nullptr);
     }
@@ -129,19 +139,21 @@ void Tiles::Tile(map<string, sf::Texture>& images, bool mine, int xcor, int ycor
 }
 void Tiles::setItem(map<string, sf::Texture>& images, vector<vector<Tiles>>& tiles, sf::RenderWindow &window)
 {   //item=false;
+    //tileNeighbor.clear();
     countNeighborMine();
 
     if (mine == true) {
         itemSprite.setTexture(images["mine"]);
         item = true;
         minecount++;
+        stoprevealing = false;
     }
 
     else {
         if (adjacentMine == 0) {
             itemSprite.setTexture(images["tile_revealed.png"]);
             item = false;
-
+            stoprevealing = true;
             this->numbertoberevealed++;
             //revealTile(tiles,images,window);
             //return;
@@ -149,55 +161,51 @@ void Tiles::setItem(map<string, sf::Texture>& images, vector<vector<Tiles>>& til
         else if (adjacentMine == 1) {
             itemSprite.setTexture(images["number_1"]);
             item = true;
+            stoprevealing = false;
 
         }
         else if (adjacentMine == 2) {
             itemSprite.setTexture(images["number_2"]);
             item = true;
-
+            stoprevealing = false;
         }
         else if (adjacentMine == 3) {
             itemSprite.setTexture(images["number_3"]);
             item = true;
-
+            stoprevealing = false;
         }
         else if (adjacentMine == 4) {
             itemSprite.setTexture(images["number_4"]);
             item = true;
-
+            stoprevealing = false;
         }
         else if (adjacentMine == 5) {
             itemSprite.setTexture(images["number_1"]);
             item = true;
-
+            stoprevealing = false;
         }
         else if (adjacentMine == 6) {
             itemSprite.setTexture(images["number_6"]);
             item = true;
-
+            stoprevealing = false;
         }
         else if (adjacentMine == 7) {
             itemSprite.setTexture(images["number_7"]);
             item = true;
-
+            stoprevealing = false;
         }
         else if (adjacentMine == 8) {
             itemSprite.setTexture(images["number_8"]);
             item = true;
-
+            stoprevealing = false;
         }
-        /*
-        else {
-            itemSprite.setTexture(images["tile_revealed"]);
-            item = true;
-        }
-         */
 
     }
 
 }
 void Tiles::countNeighborMine(){
     adjacentMine = 0;
+    //tileNeighbor.clear();
     for (unsigned int i = 0; i < tileNeighbor.size(); i++) {
         if (tileNeighbor[i] != nullptr && tileNeighbor[i]->isMine() == true) {
             adjacentMine++;
@@ -205,14 +213,15 @@ void Tiles::countNeighborMine(){
         }
     }
 }
+
 bool Tiles::isMine(){
     return mine;
 }
+
 bool Tiles::getflag(){
     return flag;
 }
 int Tiles::getFlagCount() {
-    cout<< flagCount << " FLAG COUNT IN TILES"<<endl;
     return this->flagCount;
 }
 void Tiles::revealallmines(vector<vector<Tiles>>& tiles,sf::RenderWindow &window){
@@ -221,9 +230,11 @@ void Tiles::revealallmines(vector<vector<Tiles>>& tiles,sf::RenderWindow &window
             if(tiles[i][j].mine==true){
                 bomb.setPosition(j*32,i*32);
                 window.draw(bomb);
+                cout << "MINE REVEALED" <<endl;
             }
         }
     }
+    debugmode=false;
 
 }
 void Tiles::revealTile(vector<vector<Tiles>>& tiles,map<string, sf::Texture>& images, sf::RenderWindow &window) {
@@ -241,19 +252,34 @@ void Tiles::revealTile(vector<vector<Tiles>>& tiles,map<string, sf::Texture>& im
         }
 
 }
-void Tiles:: recursion(){
-    for (int i = 0; i < tileNeighbor.size(); i++) {
-        if (tileNeighbor[i] != nullptr && !tileNeighbor[i]->item && !tileNeighbor[i]->mine && !tileNeighbor[i]->flag) {
-            if(tileNeighbor[i]->revealed==false) {
-                //window.draw(itemSprite);
-                //tileNeighbor[i]->revealTile(tiles,images,window);
-                //tileNeighbor[i]->setItem(images, tiles, window);
+void Tiles:: recursion(int a, int j,sf::RenderWindow &window ,vector<vector<Tiles>>& boardvec){
+    bool recursionfuncbool = boardvec[a][j].stoprevealing;
+    if(recursionfuncbool==false) {
+        return;
+    }
+    else {
+        for (int i = 0; i <boardvec[a][j].tileNeighbor.size(); i++) { // i <tileneighbor.size()
+            if (boardvec[a][j].tileNeighbor[i] != nullptr && boardvec[a][j].tileNeighbor[i]->revealed == false && boardvec[a][j].tileNeighbor[i]->item==false) {
+                if(i > 7){
+                    return;
+                }
+                cout <<" IN RECURSIOM " << i <<endl;
+                cout << a<< "= a  " << j << "= j" <<endl;
+
+                int x = boardvec[a][j].tileNeighbor[i]->xcor;
+                int y = boardvec[a][j].tileNeighbor[i]->ycor;
+
+                cout << x/32 << "   " << y/32 << " x-y " <<endl;
+
+                itemSprite.setPosition(x/32,y);
+                window.draw(itemSprite);
 
                 //call function to draw
-                recursion();
+                //recursion(a,j,window, boardvec);
             }
         }
     }
+    tileNeighbor.clear();
 }
 void Tiles::debugbuttonPressed(vector<vector<Tiles>>& tiles,sf::RenderWindow &window) {
     revealallmines(tiles,window);
@@ -299,4 +325,7 @@ bool Tiles::checkwin(vector<vector<Tiles>>& boardvec) {
         return true;
     }
     return false;
+}
+void Tiles::getXY() {
+    //return xcor,ycor;
 }

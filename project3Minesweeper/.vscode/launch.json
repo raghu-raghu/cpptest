@@ -8,7 +8,7 @@
             "name": "(gdb) Launch",
             "type": "cppdbg",
             "request": "launch",
-            "program": "/home/gururx/code/cpp/minesweep/project3Minesweeper/build/Minesweeper",
+            "program": "/home/gururx/code/cpp/minesweep/cpptest/project3Minesweeper/build/Minesweeper",
             "args": [],
             "stopAtEntry": false,
             "cwd": "${workspaceFolder}",

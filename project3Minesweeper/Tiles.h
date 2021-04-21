@@ -45,7 +45,8 @@ struct Tiles {
         void endgame();
         bool endgamebool;
         bool endgameintiles;
-        void recursion();
+        void recursion(int i, int j,sf::RenderWindow &window,vector<vector<Tiles>>& boardvec);
+        int bottomoftheboard(int x, int y);
     bool reset2;
     void resetInTiles(vector<vector<Tiles>>& tiles,sf::RenderWindow &window);
     void revealTile(vector<vector<Tiles>>& tiles,map<string, sf::Texture>& images, sf::RenderWindow &window);
@@ -56,6 +57,8 @@ struct Tiles {
     bool areThereAdjacentMines;
     bool drawhiddentile;
     bool rightclick;
+    bool stoprevealing;
+    void getXY();
 
 
         sf::Sprite back;

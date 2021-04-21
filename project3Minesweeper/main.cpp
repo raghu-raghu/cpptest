@@ -15,7 +15,7 @@ int main() {
     boardobj.loadWindow("boards/config.cfg");
     sf::RenderWindow window(sf::VideoMode(boardobj.width, boardobj.height), "Minesweeper!");
 
-    boardobj.initializeBoard(window, boardobj);
+    boardobj.initializeBoard(window);
 
     while (window.isOpen()) {
         sf::Event event;
@@ -42,10 +42,15 @@ int main() {
 
                 }
                 if (event.mouseButton.button == sf::Mouse::Left) {
-                    cout << "Left mouse clicked" << endl;
-                    cout << "mouse x: " << event.mouseButton.x << endl;
-                    cout << "mouse y: " << event.mouseButton.y << endl;
-                    chosen1.revealClicked(boardobj.boardvec, event.mouseButton.x, event.mouseButton.y);
+                    if(event.mouseButton.y >= boardobj.height-88){
+                        boardobj.bottomButtons(event.mouseButton.x, event.mouseButton.y,  window);
+                    }
+                    else {
+                        cout << "Left mouse clicked" << endl;
+                        cout << "mouse x: " << event.mouseButton.x << endl;
+                        cout << "mouse y: " << event.mouseButton.y << endl;
+                        chosen1.revealClicked(boardobj.boardvec, event.mouseButton.x, event.mouseButton.y);
+                    }
 
                 }
             }
@@ -54,7 +59,8 @@ int main() {
 
         //event then clear draw display
         window.clear(sf::Color::Black);
-        boardobj.updateBoard(event,boardobj,window);
+        //boardobj.updateBoard(event,boardobj,window);
+        boardobj.draw(window);
         window.display(); // comment this line to see the flag..
     }
 
